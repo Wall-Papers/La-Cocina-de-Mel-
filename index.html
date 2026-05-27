@@ -341,6 +341,62 @@ footer .hearts { color:var(--red); display:block; margin-top:.3rem; letter-spaci
   transform:translateY(0);
 }
 
+
+/* ===== VISUAL PREMIUM UPDATE ===== */
+
+.cards-grid{
+  gap: 28px !important;
+}
+
+.card{
+  border-radius: 28px !important;
+  overflow: hidden !important;
+  box-shadow: 0 18px 45px rgba(0,0,0,.12) !important;
+  background: white !important;
+}
+
+.card-img-wrap{
+  height: 320px !important;
+  overflow:hidden !important;
+  position:relative !important;
+}
+
+.card-img-wrap::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(to top, rgba(0,0,0,.35), transparent 45%);
+}
+
+.card-img-wrap img{
+  width:100% !important;
+  height:100% !important;
+  object-fit:cover !important;
+}
+
+.card-body{
+  padding: 1.2rem !important;
+}
+
+.order-btn{
+  width:100% !important;
+  border:none !important;
+  padding:14px !important;
+  border-radius:16px !important;
+  font-weight:900 !important;
+  text-decoration:none !important;
+  display:flex !important;
+  justify-content:center !important;
+  align-items:center !important;
+}
+
+.cart-item button{
+  border:none;
+  background:none;
+  cursor:pointer;
+  font-size:1rem;
+}
+
 </style>
 </head>
 <body>
@@ -601,6 +657,7 @@ document.querySelectorAll('.tab').forEach(btn=>{
 
 </div>
 
+
 <script>
 
 const cart = [];
@@ -625,16 +682,25 @@ const cards = document.querySelectorAll('.card');
 
 cards.forEach(card => {
 
-  const title =
-    card.querySelector('h3')?.innerText ||
-    card.querySelector('h2')?.innerText ||
-    'Producto';
+  let title = 'Producto';
 
-  const priceText = card.innerText.match(/\$\s?([\d\.]+)/);
+  const possibleTitles = card.querySelectorAll('h1,h2,h3,h4,strong');
 
-  const price = priceText
-    ? Number(priceText[1].replace(/\./g,''))
-    : 0;
+  possibleTitles.forEach(el=>{
+    const text = el.innerText.trim();
+
+    if(text.length > 3 && title === 'Producto'){
+      title = text;
+    }
+  });
+
+  let price = 0;
+
+  const priceMatch = card.innerText.match(/\$\s?([\d\.]+)/);
+
+  if(priceMatch){
+    price = Number(priceMatch[1].replace(/\./g,''));
+  }
 
   const btn = card.querySelector('.order-btn');
 
@@ -729,8 +795,6 @@ sendWhatsapp.addEventListener('click', ()=>{
 
 });
 
-/* Animaciones suaves */
-
 const observer = new IntersectionObserver(entries=>{
 
   entries.forEach(entry=>{
@@ -750,6 +814,7 @@ cards.forEach(card=>{
 });
 
 </script>
+
 
 </body>
 </html>
