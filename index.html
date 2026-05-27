@@ -225,6 +225,122 @@ footer {
 }
 footer strong { color:var(--gold); }
 footer .hearts { color:var(--red); display:block; margin-top:.3rem; letter-spacing:.3em; }
+
+/* ===== MEJORAS UX ===== */
+
+.cart-floating{
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  z-index:9999;
+}
+
+.cart-btn{
+  background:#C0392B;
+  color:#fff;
+  border:none;
+  padding:14px 20px;
+  border-radius:999px;
+  font-weight:900;
+  font-size:1rem;
+  box-shadow:0 10px 25px rgba(0,0,0,.25);
+  cursor:pointer;
+}
+
+.cart-panel{
+  position:fixed;
+  top:0;
+  right:-100%;
+  width:100%;
+  max-width:420px;
+  height:100vh;
+  background:#fff;
+  z-index:10000;
+  transition:right .35s ease;
+  display:flex;
+  flex-direction:column;
+  box-shadow:-10px 0 30px rgba(0,0,0,.25);
+}
+
+.cart-panel.open{
+  right:0;
+}
+
+.cart-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:1rem;
+  border-bottom:1px solid #eee;
+}
+
+.cart-header h3{
+  font-size:2rem;
+}
+
+.cart-header button{
+  border:none;
+  background:none;
+  font-size:1.5rem;
+  cursor:pointer;
+}
+
+.cart-items{
+  flex:1;
+  overflow-y:auto;
+  padding:1rem;
+}
+
+.cart-item{
+  display:flex;
+  justify-content:space-between;
+  gap:1rem;
+  padding:1rem 0;
+  border-bottom:1px solid #eee;
+}
+
+.cart-footer{
+  padding:1rem;
+  border-top:1px solid #eee;
+}
+
+#sendWhatsapp{
+  width:100%;
+  border:none;
+  background:#25D366;
+  color:white;
+  padding:1rem;
+  border-radius:14px;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.card{
+  transition:transform .35s ease, opacity .7s ease;
+}
+
+.card:hover{
+  transform:translateY(-4px);
+}
+
+.card img{
+  transition:transform .7s ease;
+}
+
+.card:hover img{
+  transform:scale(1.05);
+}
+
+.card{
+  opacity:0;
+  transform:translateY(40px);
+}
+
+.card.show-scroll{
+  opacity:1;
+  transform:translateY(0);
+}
+
 </style>
 </head>
 <body>
@@ -290,7 +406,7 @@ footer .hearts { color:var(--red); display:block; margin-top:.3rem; letter-spaci
         <div class="card-desc">Simple, clásica y deliciosa. Abundante mozzarella con salsa de tomate y orégano.</div>
         <div class="card-footer">
           <div class="card-tag">🧀 Clásica</div>
-          <a href="https://wa.me/+5491153389672?text=Hola!%20Quiero%20pedir%20una%20Pizza%20Muzza" target="_blank" class="order-btn">Pedir 🛒</a>
+          <a href="https://wa.me/+5491153389672?text=Hola!%20Quiero%20pedir%20una%20Pizza%20Muzza" target="_blank" class="order-btn">Agregar +</a>
         </div>
       </div>
     </div>
@@ -303,7 +419,7 @@ footer .hearts { color:var(--red); display:block; margin-top:.3rem; letter-spaci
         <div class="card-desc">Sabor que encanta. Jamón cocido, morrón rojo y verde sobre mozzarella derretida.</div>
         <div class="card-footer">
           <div class="card-tag">❤️ Favorita</div>
-          <a href="https://wa.me/+5491153389672?text=Hola!%20Quiero%20pedir%20una%20Pizza%20Jam%C3%B3n%20y%20Morr%C3%B3n" target="_blank" class="order-btn">Pedir 🛒</a>
+          <a href="https://wa.me/+5491153389672?text=Hola!%20Quiero%20pedir%20una%20Pizza%20Jam%C3%B3n%20y%20Morr%C3%B3n" target="_blank" class="order-btn">Agregar +</a>
         </div>
       </div>
     </div>
@@ -316,7 +432,7 @@ footer .hearts { color:var(--red); display:block; margin-top:.3rem; letter-spaci
         <div class="card-desc">Simple, tradicional y llena de sabor. Tomates frescos, aceitunas y orégano.</div>
         <div class="card-footer">
           <div class="card-tag">🫒 Tradicional</div>
-          <a href="https://wa.me/+5491153389672?text=Hola!%20Quiero%20pedir%20una%20Pizza%20Napolitana" target="_blank" class="order-btn">Pedir 🛒</a>
+          <a href="https://wa.me/+5491153389672?text=Hola!%20Quiero%20pedir%20una%20Pizza%20Napolitana" target="_blank" class="order-btn">Agregar +</a>
         </div>
       </div>
     </div>
@@ -330,7 +446,7 @@ footer .hearts { color:var(--red); display:block; margin-top:.3rem; letter-spaci
         <div class="card-desc">Irresistibles, hechas con mucho amor. Rellenas con carne especiada y jugosa.</div>
         <div class="card-footer">
           <div class="card-tag">🥩 Carne</div>
-          <a href="https://wa.me/+5491153389672?text=Hola!%20Quiero%20pedir%20Empanadas%20de%20Carne" target="_blank" class="order-btn">Pedir 🛒</a>
+          <a href="https://wa.me/+5491153389672?text=Hola!%20Quiero%20pedir%20Empanadas%20de%20Carne" target="_blank" class="order-btn">Agregar +</a>
         </div>
       </div>
     </div>
@@ -343,7 +459,7 @@ footer .hearts { color:var(--red); display:block; margin-top:.3rem; letter-spaci
         <div class="card-desc">Jugosas y sabrosas. Pollo desmenuzado con verduras y condimentos especiales.</div>
         <div class="card-footer">
           <div class="card-tag">🍗 Pollo</div>
-          <a href="https://wa.me/+5491153389672?text=Hola!%20Quiero%20pedir%20Empanadas%20de%20Pollo" target="_blank" class="order-btn">Pedir 🛒</a>
+          <a href="https://wa.me/+5491153389672?text=Hola!%20Quiero%20pedir%20Empanadas%20de%20Pollo" target="_blank" class="order-btn">Agregar +</a>
         </div>
       </div>
     </div>
@@ -357,7 +473,7 @@ footer .hearts { color:var(--red); display:block; margin-top:.3rem; letter-spaci
         <div class="card-desc">Simple, clásica e irresistible. Carne jugosa con cheddar y cebolla caramelizada.</div>
         <div class="card-footer">
           <div class="card-tag">🧅 Clásica</div>
-          <a href="https://wa.me/+5491153389672?text=Hola!%20Quiero%20pedir%20una%20Hamburguesa%20Simple" target="_blank" class="order-btn">Pedir 🛒</a>
+          <a href="https://wa.me/+5491153389672?text=Hola!%20Quiero%20pedir%20una%20Hamburguesa%20Simple" target="_blank" class="order-btn">Agregar +</a>
         </div>
       </div>
     </div>
@@ -370,7 +486,7 @@ footer .hearts { color:var(--red); display:block; margin-top:.3rem; letter-spaci
         <div class="card-desc">Doble carne, doble cheddar y cebolla caramelizada. Para los que no se conforman con poco.</div>
         <div class="card-footer">
           <div class="card-tag">💪 Doble</div>
-          <a href="https://wa.me/+5491153389672?text=Hola!%20Quiero%20pedir%20una%20Hamburguesa%20Doble" target="_blank" class="order-btn">Pedir 🛒</a>
+          <a href="https://wa.me/+5491153389672?text=Hola!%20Quiero%20pedir%20una%20Hamburguesa%20Doble" target="_blank" class="order-btn">Agregar +</a>
         </div>
       </div>
     </div>
@@ -383,7 +499,7 @@ footer .hearts { color:var(--red); display:block; margin-top:.3rem; letter-spaci
         <div class="card-desc">Simple, clásica y deliciosa. Carne jugosa con jamón y queso derretido.</div>
         <div class="card-footer">
           <div class="card-tag">🧀 Especial</div>
-          <a href="https://wa.me/+5491153389672?text=Hola!%20Quiero%20pedir%20una%20Hamburguesa%20Jam%C3%B3n%20y%20Queso" target="_blank" class="order-btn">Pedir 🛒</a>
+          <a href="https://wa.me/+5491153389672?text=Hola!%20Quiero%20pedir%20una%20Hamburguesa%20Jam%C3%B3n%20y%20Queso" target="_blank" class="order-btn">Agregar +</a>
         </div>
       </div>
     </div>
@@ -396,7 +512,7 @@ footer .hearts { color:var(--red); display:block; margin-top:.3rem; letter-spaci
         <div class="card-desc">Carne jugosa · Jamón · Queso · Lechuga · Tomate · Huevo. ¡La reina del menú! 👑</div>
         <div class="card-footer">
           <div class="card-tag">👑 Premium</div>
-          <a href="https://wa.me/+5491153389672?text=Hola!%20Quiero%20pedir%20una%20Hamburguesa%20Completa" target="_blank" class="order-btn">Pedir 🛒</a>
+          <a href="https://wa.me/+5491153389672?text=Hola!%20Quiero%20pedir%20una%20Hamburguesa%20Completa" target="_blank" class="order-btn">Agregar +</a>
         </div>
       </div>
     </div>
@@ -458,5 +574,182 @@ document.querySelectorAll('.tab').forEach(btn=>{
   });
 });
 </script>
+
+<!-- CARRITO -->
+<div class="cart-floating">
+  <button class="cart-btn" id="openCartBtn">
+    🛒 <span id="cartCount">0</span>
+  </button>
+</div>
+
+<div class="cart-panel" id="cartPanel">
+
+  <div class="cart-header">
+    <h3>Tu pedido</h3>
+    <button id="closeCart">✕</button>
+  </div>
+
+  <div class="cart-items" id="cartItems"></div>
+
+  <div class="cart-footer">
+    <h2>Total: <span id="cartTotal">$0</span></h2>
+    <br>
+    <button id="sendWhatsapp">
+      Finalizar por WhatsApp
+    </button>
+  </div>
+
+</div>
+
+<script>
+
+const cart = [];
+
+const cartPanel = document.getElementById('cartPanel');
+const openCartBtn = document.getElementById('openCartBtn');
+const closeCart = document.getElementById('closeCart');
+const cartItems = document.getElementById('cartItems');
+const cartCount = document.getElementById('cartCount');
+const cartTotal = document.getElementById('cartTotal');
+const sendWhatsapp = document.getElementById('sendWhatsapp');
+
+openCartBtn.addEventListener('click', ()=>{
+  cartPanel.classList.add('open');
+});
+
+closeCart.addEventListener('click', ()=>{
+  cartPanel.classList.remove('open');
+});
+
+const cards = document.querySelectorAll('.card');
+
+cards.forEach(card => {
+
+  const title =
+    card.querySelector('h3')?.innerText ||
+    card.querySelector('h2')?.innerText ||
+    'Producto';
+
+  const priceText = card.innerText.match(/\$\s?([\d\.]+)/);
+
+  const price = priceText
+    ? Number(priceText[1].replace(/\./g,''))
+    : 0;
+
+  const btn = card.querySelector('.order-btn');
+
+  if(btn){
+
+    btn.removeAttribute('href');
+
+    btn.addEventListener('click', (e)=>{
+
+      e.preventDefault();
+
+      cart.push({
+        name:title,
+        price:price
+      });
+
+      renderCart();
+
+      btn.innerText = '✔ Agregado';
+
+      setTimeout(()=>{
+        btn.innerText = 'Agregar +';
+      },1200);
+
+    });
+
+  }
+
+});
+
+function renderCart(){
+
+  cartItems.innerHTML = '';
+
+  let total = 0;
+
+  cart.forEach((item,index)=>{
+
+    total += item.price;
+
+    const div = document.createElement('div');
+
+    div.classList.add('cart-item');
+
+    div.innerHTML = `
+      <div>
+        <strong>${item.name}</strong><br>
+        $${item.price.toLocaleString()}
+      </div>
+
+      <button onclick="removeItem(${index})">
+        ❌
+      </button>
+    `;
+
+    cartItems.appendChild(div);
+
+  });
+
+  cartCount.innerText = cart.length;
+  cartTotal.innerText = '$' + total.toLocaleString();
+
+}
+
+function removeItem(index){
+  cart.splice(index,1);
+  renderCart();
+}
+
+sendWhatsapp.addEventListener('click', ()=>{
+
+  if(cart.length === 0) return;
+
+  let message = 'Hola! Quiero pedir:%0A%0A';
+
+  let total = 0;
+
+  cart.forEach(item => {
+
+    message += `• ${item.name} - $${item.price.toLocaleString()}%0A`;
+
+    total += item.price;
+
+  });
+
+  message += `%0A🧾 Total: $${total.toLocaleString()}`;
+
+  window.open(
+    `https://wa.me/5491153389672?text=${message}`,
+    '_blank'
+  );
+
+});
+
+/* Animaciones suaves */
+
+const observer = new IntersectionObserver(entries=>{
+
+  entries.forEach(entry=>{
+
+    if(entry.isIntersecting){
+      entry.target.classList.add('show-scroll');
+    }
+
+  });
+
+},{
+  threshold:.15
+});
+
+cards.forEach(card=>{
+  observer.observe(card);
+});
+
+</script>
+
 </body>
 </html>
