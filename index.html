@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Cocina de Mel</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700;800&family=Bebas+Neue&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #F5F0E8;
+  --black: #1A1A1A;
+  --red:   #C0392B;
+  --gold:  #F0A500;
+  --card-bg: #FDFAF4;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--cream); font-family:'Nunito',sans-serif; color:var(--black); overflow-x:hidden; }
+
+/* ── TOP BAR ── */
+.topbar {
+  background:var(--black); color:#fff;
+  text-align:center; padding:.55rem 1rem;
+  font-size:.82rem; font-weight:800; letter-spacing:.05em;
+}
+.topbar span { color:var(--gold); }
+
+/* ── HERO ── */
+.hero {
+  display:flex; flex-direction:column; align-items:center;
+  padding:2rem 1rem 0;
+  background:var(--cream);
+}
+
+.logo-wrap { margin-bottom:1rem; animation:popIn .7s cubic-bezier(.34,1.56,.64,1) both; }
+.logo-wrap img {
+  width:130px; height:130px; border-radius:50%;
+  box-shadow:0 8px 32px rgba(0,0,0,.22); display:block;
+}
+@keyframes popIn { from{opacity:0;transform:scale(.4)} to{opacity:1;transform:scale(1)} }
+
+.hero-sub {
+  font-family:'Dancing Script',cursive;
+  font-size:clamp(1rem,4vw,1.4rem);
+  color:#666; margin-bottom:1.4rem; text-align:center;
+  animation:fadeUp .6s .2s both;
+}
+.hero-sub strong { color:var(--red); }
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── CAROUSEL ── */
+.carousel-wrap {
+  width:100%; max-width:480px;
+  overflow:hidden; border-radius:18px;
+  box-shadow:0 10px 40px rgba(0,0,0,.16);
+  position:relative; background:#000;
+  animation:fadeUp .6s .35s both;
+}
+.carousel-track {
+  display:flex;
+  transition:transform .65s cubic-bezier(.77,0,.175,1);
+  will-change:transform;
+}
+.slide { flex:0 0 100%; }
+.slide img {
+  width:100%;
+  aspect-ratio:9/16;
+  object-fit:cover;
+  display:block;
+}
+.carousel-dots {
+  display:flex; justify-content:center; gap:.45rem;
+  padding:.7rem 0; background:var(--black);
+}
+.dot {
+  width:7px; height:7px; border-radius:50%;
+  background:rgba(255,255,255,.3); cursor:pointer;
+  transition:background .3s,transform .3s;
+}
+.dot.active { background:var(--gold); transform:scale(1.5); }
+
+/* nav arrows */
+.carousel-arrow {
+  position:absolute; top:50%; transform:translateY(-50%);
+  background:rgba(0,0,0,.45); border:none; color:#fff;
+  font-size:1.3rem; padding:.4rem .65rem; cursor:pointer;
+  border-radius:6px; z-index:2; transition:background .2s;
+}
+.carousel-arrow:hover { background:rgba(0,0,0,.7); }
+.arr-prev { left:.5rem; }
+.arr-next { right:.5rem; }
+
+/* ── PROMO ── */
+.promo {
+  background:var(--black); color:#fff;
+  padding:2rem 1.2rem; text-align:center;
+  position:relative; overflow:hidden;
+  margin-top:0;
+}
+.promo::before {
+  content:''; position:absolute; inset:0;
+  background:repeating-linear-gradient(45deg,transparent,transparent 18px,rgba(240,165,0,.04) 18px,rgba(240,165,0,.04) 36px);
+}
+.promo-inner { position:relative; z-index:1; max-width:560px; margin:0 auto; }
+.promo h2 {
+  font-family:'Bebas Neue',cursive;
+  font-size:clamp(2rem,7vw,3.2rem); letter-spacing:.05em; line-height:1;
+}
+.promo h2 em { color:var(--red); font-style:normal; }
+.promo-pills { display:flex; justify-content:center; gap:.7rem; margin:.8rem 0; flex-wrap:wrap; }
+.pill {
+  background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2);
+  border-radius:40px; padding:.4rem 1rem;
+  font-weight:800; font-size:.9rem;
+}
+.promo-price {
+  display:inline-block; background:var(--red);
+  font-family:'Bebas Neue',cursive;
+  font-size:clamp(2.8rem,8vw,4rem); letter-spacing:.04em;
+  padding:.2rem 1.8rem; border-radius:10px;
+  box-shadow:0 6px 24px rgba(192,57,43,.45);
+  animation:wiggle 4s ease-in-out infinite;
+}
+@keyframes wiggle { 0%,100%{transform:rotate(-1.5deg)} 50%{transform:rotate(1.5deg)} }
+.promo-sub { color:var(--gold); font-weight:800; font-size:.88rem; margin-top:.5rem; }
+
+/* ── MENÚ ── */
+.menu { padding:3rem 1rem 5rem; max-width:1100px; margin:0 auto; }
+.menu-head { text-align:center; margin-bottom:2rem; }
+.menu-head h2 {
+  font-family:'Bebas Neue',cursive;
+  font-size:clamp(2rem,6vw,3rem); letter-spacing:.06em;
+}
+.menu-head h2 span { color:var(--red); }
+.underline { display:block; width:60px; height:5px; background:var(--gold); border-radius:4px; margin:.3rem auto 0; }
+
+/* tabs */
+.tabs { display:flex; justify-content:center; gap:.45rem; flex-wrap:wrap; margin-bottom:1.8rem; }
+.tab {
+  font-family:'Nunito',sans-serif; font-weight:900; font-size:.9rem;
+  padding:.45rem 1.1rem; border-radius:40px; border:3px solid var(--black);
+  background:transparent; cursor:pointer; transition:all .2s;
+}
+.tab.active, .tab:hover { background:var(--black); color:#fff; }
+.tab.active { box-shadow:0 4px 14px rgba(0,0,0,.18); }
+
+/* grid — cards en formato vertical */
+.grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+  gap:28px !important; /* Solucionado: Aplica gap premium */
+}
+
+/* en móvil: 2 columnas */
+@media(max-width:520px) {
+  .grid { grid-template-columns:repeat(2,1fr); gap:.9rem !important; }
+}
+
+/* Solucionado: Unificación limpia de estilos Premium y Lógica .card */
+.card {
+  display:none; 
+  flex-direction:column;
+  background: white;
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 18px 45px rgba(0,0,0,.12);
+  border: 2px solid transparent;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: transform .35s ease, opacity .7s ease, border-color .25s, box-shadow .25s;
+}
+
+.card.show { 
+  display:flex; 
+  opacity:1;
+  transform:translateY(0);
+}
+
+.card:hover { 
+  transform:translateY(-5px); 
+  box-shadow:0 14px 32px rgba(0,0,0,.14); 
+  border-color:var(--gold); 
+}
+
+/* imagen vertical 9:16 dentro de la card */
+.card-img-wrap {
+  width:100%;
+  height: 320px;
+  overflow:hidden;
+  position:relative;
+  flex-shrink:0;
+}
+.card-img-wrap::after {
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(to top, rgba(0,0,0,.35), transparent 45%);
+}
+.card-img-wrap img {
+  width:100%; height:100%;
+  object-fit:cover; display:block;
+  transition:transform .7s ease;
+}
+.card:hover .card-img-wrap img { transform:scale(1.05); }
+
+.card-body { padding:1.2rem; display:flex; flex-direction:column; flex:1; }
+.card-cat { font-size:.68rem; font-weight:900; text-transform:uppercase; letter-spacing:.12em; color:var(--gold); margin-bottom:.2rem; }
+.card-name {
+  font-family:'Bebas Neue',cursive; font-size:1.25rem; letter-spacing:.04em; line-height:1.1;
+  margin-bottom:.3rem;
+}
+.card-name em { color:var(--red); font-style:normal; }
+.card-desc { font-size:.8rem; color:#666; flex:1; line-height:1.45; }
+.card-footer { display:flex; align-items:center; justify-content:space-between; margin-top:.9rem; }
+.card-tag { font-size:.72rem; font-weight:800; color:#aaa; }
+
+.order-btn {
+  width:100%;
+  border:none;
+  background:var(--black); color:#fff;
+  font-weight:900; font-size:.8rem;
+  padding:14px; border-radius:16px;
+  text-decoration:none; transition:background .2s; white-space:nowrap;
+  display:flex; justify-content:center; align-items:center;
+}
+.order-btn:hover { background:var(--red); }
+
+/* ── STICKY WA ── */
+.sticky-wa {
+  position:fixed; bottom:5.5rem; right:1.3rem; z-index:999; /* Solucionado: Subido para no encimarse con el carrito */
+  animation:bounceIn .8s 1s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes bounceIn { from{opacity:0;transform:scale(.2)} to{opacity:1;transform:scale(1)} }
+.sticky-wa a {
+  display:flex; align-items:center; gap:.45rem;
+  background:#25D366; color:#fff;
+  font-weight:900; font-size:.95rem;
+  padding:.8rem 1.4rem; border-radius:50px;
+  text-decoration:none;
+  box-shadow:0 6px 24px rgba(37,211,102,.5);
+  transition:transform .2s;
+}
+.sticky-wa a:hover { transform:scale(1.06); }
+.sticky-wa svg { width:21px; height:21px; fill:#fff; flex-shrink:0; }
+
+/* ── FOOTER ── */
+footer {
+  background:var(--black); color:rgba(255,255,255,.5);
+  text-align:center; padding:1.6rem 1rem; font-size:.82rem;
+}
+footer strong { color:var(--gold); }
+footer .hearts { color:var(--red); display:block; margin-top:.3rem; letter-spacing:.3em; }
+
+/* ===== MEJORAS UX ===== */
+.cart-floating{
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  z-index:9999;
+}
+
+.cart-btn{
+  background:#C0392B;
+  color:#fff;
+  border:none;
+  padding:14px 20px;
+  border-radius:999px;
+  font-weight:900;
+  font-size:1rem;
+  box-shadow:0 10px 25px rgba(0,0,0,.25);
+  cursor:pointer;
+}
+
+.cart-panel{
+  position:fixed;
+  top:0;
+  right:-100%;
+  width:100%;
+  max-width:420px;
+  height:100vh;
+  background:#fff;
+  z-index:10000;
+  transition:right .35s ease;
+  display:flex;
+  flex-direction:column;
+  box-shadow:-10px 0 30px rgba(0,0,0,.25);
+}
+
+.cart-panel.open{
+  right:0;
+}
+
+.cart-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:1rem;
+  border-bottom:1px solid #eee;
+}
+
+.cart-header h3{
+  font-size:2rem;
+}
+
+.cart-header button{
+  border:none;
+  background:none;
+  font-size:1.5rem;
+  cursor:pointer;
+}
+
+.cart-items{
+  flex:1;
+  overflow-y:auto;
+  padding:1rem;
+}
+
+.cart-item{
+  display:flex;
+  justify-content:space-between;
+  gap:1rem;
+  padding:1rem 0;
+  border-bottom:1px solid #eee;
+}
+
+.cart-item button{
+  border:none;
+  background:none;
+  cursor:pointer;
+  font-size:1rem;
+}
+
+.cart-footer{
+  padding:1rem;
+  border-top:1px solid #eee;
+}
+
+#sendWhatsapp{
+  width:100%;
+  border:none;
+  background:#25D366;
+  color:white;
+  padding:1rem;
+  border-radius:14px;
+  font-weight:900;
+  cursor:pointer;
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span>🍕</span> Pizzas &nbsp;·&nbsp; Empanadas &nbsp;·&nbsp; Hamburguesas &nbsp;<span>·</span>&nbsp; Hechas con amor <span>♥</span>
+</div>
+
+<section class="hero">
+  <div class="logo-wrap">
+    <img src="data:image/png;base64,..." alt="Logo">
+  </div>
+  
+  <div class="hero-sub">
+    Bienvenido a <strong>La Cocina de Mel</strong>
+  </div>
+
+  <div class="carousel-wrap">
+    <button class="carousel-arrow arr-prev" id="prevBtn">‹</button>
+    <button class="carousel-arrow arr-next" id="nextBtn">›</button>
+    <div class="carousel-track" id="track">
+      <div class="slide"><img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=600" alt="Pizza"></div>
+      <div class="slide"><img src="https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?q=80&w=600" alt="Pizza b"></div>
+      <div class="slide"><img src="https://images.unsplash.com/photo-1551183053-bf91a1d81141?q=80&w=600" alt="Empanadas"></div>
+    </div>
+    <div class="carousel-dots" id="dotsContainer"></div>
+  </div>
+</section>
+
+<section class="promo">
+  <div class="promo-inner">
+    <h2>PROMO <em>WEEKEND</em></h2>
+    <div class="promo-pills">
+      <div class="pill">🍕 1 Pizza Muzza</div>
+      <div class="pill">🥟 6 Empanadas surtidas</div>
+    </div>
+    <div class="promo-price">$18.000</div>
+    <div class="promo-sub">* Válido Viernes, Sábados y Domingos.</div>
+  </div>
+</section>
+
+<main class="menu">
+  <div class="menu-head">
+    <h2>NUESTRO <span>MENÚ</span></h2>
+    <span class="underline"></span>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-cat="todos">Todos</button>
+    <button class="tab" data-cat="pizzas">Pizzas</button>
+    <button class="tab" data-cat="empanadas">Empanadas</button>
+    <button class="tab" data-cat="hamburguesas">Hamburguesas</button>
+  </div>
+
+  <div class="grid cards-grid" id="menuGrid">
+    </div>
+</main>
+
+<div class="sticky-wa">
+  <a href="https://wa.me/5491153389672?text=Hola!%20Quería%20hacer%20una%20consulta." target="_blank">
+    <svg viewBox="0 0 32 32">
+      <path d="M16 2a13 13 0 0 0-11.3 19.4L3 29l7.8-2A13 13 0 1 0 16 2zm6.7 18.3c-.3.8-1.5 1.5-2.1 1.6-.6.1-1.3.2-3.7-.8a12.6 12.6 0 0 1-5.3-4.7c-.6-.8-1-1.8-1-2.8a3 3 0 0 1 1-2.2c.3-.3.6-.4.9-.4h.3c.2 0 .5 0 .7.5l.9 2.2c.1.2.1.4 0 .6l-.4.5c-.1.2-.3.4-.5.5-.2.1-.4.3-.2.6a7.6 7.6 0 0 0 2.8 3.5 6.3 6.3 0 0 0 3.7 1.3c.4 0 .6-.2.8-.4l.5-.7c.2-.3.5-.2.8-.1l2.2 1c.3.1.5.3.4.6z"/>
+    </svg>
+    <span>Consultas</span>
+  </a>
+</div>
+
+<div class="cart-floating">
+  <button class="cart-btn" id="openCart">
+    🛒 <span id="cartCount">0</span>
+  </button>
+</div>
+
+<div class="cart-panel" id="cartPanel">
+  <div class="cart-header">
+    <h3>Tu Pedido</h3>
+    <button id="closeCart">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    </div>
+  <div class="cart-footer">
+    <div style="display:flex; justify-content:space-between; margin-bottom:1rem; font-weight:900; font-size:1.2rem;">
+      <span>Total:</span>
+      <span id="cartTotal">$0</span>
+    </div>
+    <button id="sendWhatsapp">Enviar pedido por WhatsApp 🚀</button>
+  </div>
+</div>
+
+<footer>
+  <p><strong>La Cocina de Mel</strong> · Pilar, Buenos Aires</p>
+  <p class="hearts">♥♥♥</p>
+</footer>
+
+<script>
+// --- CAROUSEL LOGIC ---
+const track = document.getElementById('track');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const dotsContainer = document.getElementById('dotsContainer');
+const slides = Array.from(track.children);
+
+let currentIndex = 0;
+
+slides.forEach((_, i) => {
+  const dot = document.createElement('div');
+  dot.classList.add('dot');
+  if(i === 0) dot.classList.add('active');
+  dot.addEventListener('click', () => goToSlide(i));
+  dotsContainer.appendChild(dot);
+});
+
+const dots = Array.from(dotsContainer.children);
+
+function updateDots() {
+  dots.forEach((dot, i) => {
+    dot.classList.toggle('active', i === currentIndex);
+  });
+}
+
+function goToSlide(index) {
+  if(index < 0) index = slides.length - 1;
+  if(index >= slides.length) index = 0;
+  currentIndex = index;
+  track.style.transform = `translateX(-${currentIndex * 100}%)`;
+  updateDots();
+}
+
+nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
+prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
+
+setInterval(() => {
+  goToSlide(currentIndex + 1);
+}, 5000);
+
+
+// --- DATOS DEL MENÚ ---
+/* CAMBIAR PRECIOS (PRODUCTOS CORREGIDOS, REALES Y CON SUS VALORES) */
+const menuData = [
+  {
+    id: 1,
+    category: 'pizzas',
+    name: 'Pizza Muzza',
+    desc: 'Salsa de tomate artesanal, abundante muzzarella, aceitunas y un toque de orégano fresco.',
+    price: 10000,
+    tag: 'La más pedida',
+    img: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=500'
+  },
+  {
+    id: 2,
+    category: 'pizzas',
+    name: 'Pizza Jamón y Morrón',
+    desc: 'Muzzarella premium, fetas de jamón cocido seleccionado, morrones asados y olivas.',
+    price: 12000,
+    tag: 'Especialidad',
+    img: 'https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?q=80&w=500'
+  },
+  {
+    id: 3,
+    category: 'empanadas',
+    name: 'Docena Empanadas de Carne',
+    desc: 'Carne vacuna seleccionada picada, cebolla, huevo duro y el auténtico condimento criollo (12 unidades).',
+    price: 24000,
+    tag: 'Horno de barro',
+    img: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?q=80&w=500'
+  },
+  {
+    id: 4,
+    category: 'empanadas',
+    name: 'Docena Empanadas de Pollo',
+    desc: 'Pechuga de pollo desmenuzada, vegetales salteados, huevo y especias perfectas (12 unidades).',
+    price: 24000,
+    tag: 'Súper jugosas',
+    img: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?q=80&w=500'
+  },
+  {
+    id: 5,
+    category: 'hamburguesas',
+    name: 'Hamburguesa Simple',
+    desc: 'Medallón de carne casero, queso cheddar derretido y aderezos en pan artesanal esponjoso.',
+    price: 8000,
+    tag: 'Clásica',
+    img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=500'
+  },
+  {
+    id: 6,
+    category: 'hamburguesas',
+    name: 'Hamburguesa Doble',
+    desc: 'Doble medallón de carne de la casa, doble queso cheddar fundido y panceta crocante.',
+    price: 11000,
+    tag: 'Para valientes',
+    img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=500'
+  },
+  {
+    id: 7,
+    category: 'hamburguesas',
+    name: 'Hamburguesa Jamón y Queso',
+    desc: 'Medallón de carne seleccionado, queso muzzarella fundido y jamón cocido tradicional.',
+    price: 9000,
+    tag: 'La tradicional',
+    img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=500'
+  },
+  {
+    id: 8,
+    category: 'hamburguesas',
+    name: 'Hamburguesa Completa',
+    desc: 'Medallón de carne casero, queso cheddar, jamón, huevo frito, lechuga y tomate fresco.',
+    price: 10000,
+    tag: 'Con todo',
+    img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=500'
+  }
+];
+
+// --- RENDER MENÚ ---
+const menuGrid = document.getElementById('menuGrid');
+
+function renderMenu(filter = 'todos') {
+  menuGrid.innerHTML = '';
+  
+  menuData.forEach(item => {
+    if(filter !== 'todos' && item.category !== filter) return;
+
+    const card = document.createElement('div');
+    card.classList.add('card', 'show');
+    card.setAttribute('data-category', item.category);
+
+    card.innerHTML = `
+      <div class="card-img-wrap">
+        <img src="${item.img}" alt="${item.name}">
+      </div>
+      <div class="card-body">
+        <div class="card-cat">${item.category}</div>
+        <h3 class="card-name">${item.name}</h3>
+        <p class="card-desc">${item.desc}</p>
+        <div class="card-footer">
+          <span class="card-tag">${item.tag}</span>
+        </div>
+        <div style="margin-top:1rem; display:flex; align-items:center; justify-content:space-between; gap:10px;">
+          <span style="font-size:1.4rem; font-weight:900; color:var(--red);">$${item.price.toLocaleString()}</span>
+          <button class="order-btn add-to-cart" data-id="${item.id}" style="cursor:pointer;">
+            Agregar +
+          </button>
+        </div>
+      </div>
+    `;
+    menuGrid.appendChild(card);
+  });
+
+  /* Solucionado: Se asegura el enlace correcto de eventos cada vez que se filtra o renderiza */
+  initCartEvents();
+}
+
+// --- TABS LOGIC ---
+const tabs = document.querySelectorAll('.tab');
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    tabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    renderMenu(tab.getAttribute('data-cat'));
+  });
+});
+
+// Inicializar el catálogo
+renderMenu();
+
+
+// --- CART LOGIC ---
+let cart = [];
+
+const openCart = document.getElementById('openCart');
+const closeCart = document.getElementById('closeCart');
+const cartPanel = document.getElementById('cartPanel');
+const cartItems = document.getElementById('cartItems');
+const cartCount = document.getElementById('cartCount');
+const cartTotal = document.getElementById('cartTotal');
+const sendWhatsapp = document.getElementById('sendWhatsapp');
+
+openCart.addEventListener('click', () => cartPanel.classList.add('open'));
+closeCart.addEventListener('click', () => cartPanel.classList.remove('open'));
+
+function initCartEvents(){
+  const btns = document.querySelectorAll('.add-to-cart');
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      /* Solucionado: Macheo estricto transformando el atributo ID a número entero */
+      const id = parseInt(btn.getAttribute('data-id'), 10);
+      const product = menuData.find(p => p.id === id);
+      
+      if (product) {
+        /* Solucionado: Pasa exactamente el nombre del producto real al arreglo */
+        cart.push({
+          name: product.name,
+          price: product.price
+        });
+
+        renderCart();
+
+        btn.innerText = '✔ Agregado';
+        setTimeout(()=>{
+          btn.innerText = 'Agregar +';
+        },1200);
+      }
+    });
+  });
+}
+
+function renderCart(){
+  cartItems.innerHTML = '';
+  let total = 0;
+
+  cart.forEach((item,index)=>{
+    total += item.price;
+
+    const div = document.createElement('div');
+    div.classList.add('cart-item');
+    div.innerHTML = `
+      <div>
+        <strong>${item.name}</strong><br>
+        $${item.price.toLocaleString()}
+      </div>
+      <button onclick="removeItem(${index})">
+        ❌
+      </button>
+    `;
+    cartItems.appendChild(div);
+  });
+
+  cartCount.innerText = cart.length;
+  cartTotal.innerText = '$' + total.toLocaleString();
+}
+
+function removeItem(index){
+  cart.splice(index,1);
+  renderCart();
+}
+
+/* Solucionado: Sintaxis reparada por completo para que el botón envíe de verdad el mensaje */
+sendWhatsapp.addEventListener('click', ()=>{
+  if(cart.length === 0) return;
+
+  let message = 'Hola! Quiero pedir:%0A%0A';
+  let total = 0;
+
+  cart.forEach(item => {
+    message += `• ${item.name} - $${item.price.toLocaleString()}%0A`;
+    total += item.price;
+  });
+
+  message += `%0A🧾 Total: $${total.toLocaleString()}`;
+
+  window.open(
+    `https://wa.me/5491153389672?text=${message}`,
+    '_blank'
+  );
+});
+</script>
+
+</body>
+</html>
