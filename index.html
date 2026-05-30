@@ -507,7 +507,17 @@ document.querySelectorAll('.tab').forEach(btn => {
 });
 
 // ── Cart ──
-let cart = {};
+let cart = JSON.parse(
+  localStorage.getItem('mel_cart') || '{}'
+);
+function saveCart(){
+
+  localStorage.setItem(
+    'mel_cart',
+    JSON.stringify(cart)
+  );
+
+}
 const cartBar   = document.getElementById('cartBar');
 const cartCount = document.getElementById('cartCount');
 const cartItems = document.getElementById('cartItems');
@@ -533,7 +543,7 @@ function updateCart(){
     cartBar.classList.remove('open');
     stickyWa.classList.remove('hidden');
     cartItems.textContent='';
-  }
+  } saveCart();
 }
 
 function clearCart(){
@@ -544,8 +554,89 @@ function clearCart(){
 function sendOrder(){
   const lines = Object.entries(cart).map(([k,v])=>`- ${v}x ${k}`).join('%0A');
   const msg = `Hola! Quiero hacer el siguiente pedido:%0A%0A${lines}%0A%0AGracias! 😊`;
+  saveOrderHistory();
   window.open(`https://wa.me/+5491153389672?text=${msg}`,'_blank');
 }
+
+function saveOrderHistory(){
+
+  const history = JSON.parse(
+    localStorage.getItem('mel_history') || '[]'
+  );
+
+  history.unshift({
+    date:new Date().toLocaleString(),
+    items:{...cart}
+  });
+
+  localStorage.setItem(
+    'mel_history',
+    JSON.stringify(history.slice(0,5))
+  );
+
+}
+
+window.addEventListener('load',()=>{
+
+  updateCart();
+
+  showLastOrder();
+
+});
+
+function showLastOrder(){
+
+  const history = JSON.parse(
+    localStorage.getItem('mel_history') || '[]'
+  );
+
+  if(history.length===0) return;
+
+  const last = history[0];
+
+  const section = document.createElement('div');
+
+  section.style.padding='1rem';
+  section.style.margin='1rem';
+  section.style.border='2px solid #F0A500';
+  section.style.borderRadius='20px';
+  section.style.background='#1A1A1A';
+  section.style.color='#fff';
+
+  let html='<h3>🕓 Último pedido</h3>';
+
+  Object.entries(last.items).forEach(([name,qty])=>{
+
+    html += `<div>${qty}x ${name}</div>`;
+
+  });
+
+  html += `
+    <br>
+    <button id="repeatOrderBtn">
+      🔁 Pedir nuevamente
+    </button>
+  `;
+
+  section.innerHTML = html;
+
+  document.body.insertBefore(
+    section,
+    document.body.children[1]
+  );
+
+  document
+    .getElementById('repeatOrderBtn')
+    .addEventListener('click',()=>{
+
+      cart = {...last.items};
+
+      updateCart();
+
+    });
+
+}
+
 </script>
 
 <script>
@@ -568,7 +659,72 @@ if ('serviceWorker' in navigator) {
 
 }
 
+let deferredPrompt;
+
+window.addEventListener(
+'beforeinstallprompt',
+(e)=>{
+
+  e.preventDefault();
+
+  deferredPrompt = e;
+
+  document
+    .getElementById('installBanner')
+    .style.display='block';
+
+});
+
+document.addEventListener(
+'click',
+async(e)=>{
+
+  if(
+    e.target &&
+    e.target.id==='installBtn' &&
+    deferredPrompt
+  ){
+
+    deferredPrompt.prompt();
+
+    await deferredPrompt.userChoice;
+
+    deferredPrompt=null;
+
+    document
+      .getElementById('installBanner')
+      .style.display='none';
+
+  }
+
+});
+
 </script>
+
+<div id="installBanner"
+style="
+display:none;
+position:fixed;
+bottom:90px;
+left:10px;
+right:10px;
+background:#1A1A1A;
+color:white;
+padding:15px;
+border-radius:15px;
+border:2px solid #F0A500;
+z-index:9999;
+">
+
+<b>📲 Instalá La Cocina de Mel</b>
+
+<br><br>
+
+<button id="installBtn">
+Instalar
+</button>
+
+</div>
 
 </body>
 </html>
