@@ -507,172 +507,225 @@ document.querySelectorAll('.tab').forEach(btn => {
 });
 
 // ── Cart ──
-// ── STATE ──
-let cart = JSON.parse(localStorage.getItem('mel_cart') || '{}');
+let cart = JSON.parse(
+  localStorage.getItem('mel_cart') || '{}'
+);
+function saveCart(){
 
-// ── DOM (se asigna luego del load) ──
-let cartBar, cartCount, cartItems, stickyWa;
-let installBanner, installBtn;
+  localStorage.setItem(
+    'mel_cart',
+    JSON.stringify(cart)
+  );
 
-let deferredPrompt = null;
-
-// ── STORAGE ──
-function saveCart() {
-  localStorage.setItem('mel_cart', JSON.stringify(cart));
 }
+const cartBar   = document.getElementById('cartBar');
+const cartCount = document.getElementById('cartCount');
+const cartItems = document.getElementById('cartItems');
+const stickyWa  = document.getElementById('stickyWa');
 
-// ── CART ──
-function addToCart(btn, name) {
-  cart[name] = (cart[name] || 0) + 1;
-
+function addToCart(btn, name){
+  cart[name] = (cart[name]||0) + 1;
   btn.textContent = '✓ Agregado';
   btn.classList.add('added');
-
-  setTimeout(() => {
-    btn.textContent = '+ Agregar';
-    btn.classList.remove('added');
-  }, 1200);
-
+  setTimeout(()=>{ btn.textContent='+ Agregar'; btn.classList.remove('added'); }, 1200);
   updateCart();
 }
 
-function updateCart() {
-  const total = Object.values(cart).reduce((a, b) => a + b, 0);
+function updateCart(){
+  const total = Object.values(cart).reduce((a,b)=>a+b,0);
   cartCount.textContent = total;
-
-  if (total > 0) {
+  if(total>0){
     cartBar.classList.add('open');
     stickyWa.classList.add('hidden');
-
-    const lines = Object.entries(cart).map(([k, v]) => `${v}x ${k}`);
+    const lines = Object.entries(cart).map(([k,v])=>`${v}x ${k}`);
     cartItems.textContent = lines.join(' · ');
   } else {
     cartBar.classList.remove('open');
     stickyWa.classList.remove('hidden');
-    cartItems.textContent = '';
-  }
-
-  saveCart();
+    cartItems.textContent='';
+  } saveCart();
 }
 
-function clearCart() {
-  cart = {};
+function clearCart(){
+  cart={};
   updateCart();
 }
 
-// ── ORDER ──
-function sendOrder() {
-  const lines = Object.entries(cart)
-    .map(([k, v]) => `- ${v}x ${k}`)
-    .join('%0A');
-
+function sendOrder(){
+  const lines = Object.entries(cart).map(([k,v])=>`- ${v}x ${k}`).join('%0A');
   const msg = `Hola! Quiero hacer el siguiente pedido:%0A%0A${lines}%0A%0AGracias! 😊`;
-
   saveOrderHistory();
-  window.open(`https://wa.me/5491153389672?text=${msg}`, '_blank');
+  window.open(`https://wa.me/+5491153389672?text=${msg}`,'_blank');
 }
 
-function saveOrderHistory() {
-  const history = JSON.parse(localStorage.getItem('mel_history') || '[]');
+function saveOrderHistory(){
+
+  const history = JSON.parse(
+    localStorage.getItem('mel_history') || '[]'
+  );
 
   history.unshift({
-    date: new Date().toLocaleString(),
-    items: { ...cart }
+    date:new Date().toLocaleString(),
+    items:{...cart}
   });
 
   localStorage.setItem(
     'mel_history',
-    JSON.stringify(history.slice(0, 5))
+    JSON.stringify(history.slice(0,5))
   );
+
 }
 
-// ── LAST ORDER UI ──
-function showLastOrder() {
-  const history = JSON.parse(localStorage.getItem('mel_history') || '[]');
-  if (!history.length) return;
+window.addEventListener('load',()=>{
+
+  updateCart();
+
+  showLastOrder();
+
+});
+
+function showLastOrder(){
+
+  const history = JSON.parse(
+    localStorage.getItem('mel_history') || '[]'
+  );
+
+  if(history.length===0) return;
 
   const last = history[0];
 
   const section = document.createElement('div');
-  section.style.padding = '1rem';
-  section.style.margin = '1rem';
-  section.style.border = '2px solid #F0A500';
-  section.style.borderRadius = '20px';
-  section.style.background = '#1A1A1A';
-  section.style.color = '#fff';
 
-  let html = '<h3>🕓 Último pedido</h3>';
+  section.style.padding='1rem';
+  section.style.margin='1rem';
+  section.style.border='2px solid #F0A500';
+  section.style.borderRadius='20px';
+  section.style.background='#1A1A1A';
+  section.style.color='#fff';
 
-  Object.entries(last.items).forEach(([name, qty]) => {
+  let html='<h3>🕓 Último pedido</h3>';
+
+  Object.entries(last.items).forEach(([name,qty])=>{
+
     html += `<div>${qty}x ${name}</div>`;
+
   });
 
   html += `
     <br>
-    <button id="repeatOrderBtn">🔁 Pedir nuevamente</button>
+    <button id="repeatOrderBtn">
+      🔁 Pedir nuevamente
+    </button>
   `;
 
   section.innerHTML = html;
 
-  document.body.insertBefore(section, document.body.children[1]);
+  document.body.insertBefore(
+    section,
+    document.body.children[1]
+  );
 
-  document.getElementById('repeatOrderBtn').addEventListener('click', () => {
-    cart = { ...last.items };
-    updateCart();
-  });
-}
+  document
+    .getElementById('repeatOrderBtn')
+    .addEventListener('click',()=>{
 
-// ── PWA INSTALL ──
-function initPWA() {
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
+      cart = {...last.items};
 
-    if (installBanner) {
-      installBanner.style.display = 'block';
-    }
-  });
+      updateCart();
 
-  document.addEventListener('click', async (e) => {
-    if (e.target && e.target.id === 'installBtn' && deferredPrompt) {
-      deferredPrompt.prompt();
-      await deferredPrompt.userChoice;
-
-      deferredPrompt = null;
-      installBanner.style.display = 'none';
-    }
-  });
-}
-
-// ── SERVICE WORKER ──
-function initServiceWorker() {
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker
-        .register('./service-worker.js')
-        .then(() => console.log('Service Worker registrado'))
-        .catch(err => console.log('Error SW:', err));
     });
-  }
+
 }
 
-// ── INIT ──
-window.addEventListener('load', () => {
-  // DOM refs
-  cartBar = document.getElementById('cartBar');
-  cartCount = document.getElementById('cartCount');
-  cartItems = document.getElementById('cartItems');
-  stickyWa = document.getElementById('stickyWa');
+</script>
 
-  installBanner = document.getElementById('installBanner');
-  installBtn = document.getElementById('installBtn');
+<script>
 
-  // init systems
-  updateCart();
-  showLastOrder();
-  initPWA();
-  initServiceWorker();
+if ('serviceWorker' in navigator) {
+
+  window.addEventListener('load', () => {
+
+    navigator.serviceWorker.register('./service-worker.js')
+
+      .then(reg => {
+        console.log('Service Worker registrado');
+      })
+
+      .catch(err => {
+        console.log('Error SW:', err);
+      });
+
+  });
+
+}
+
+let deferredPrompt;
+
+window.addEventListener(
+'beforeinstallprompt',
+(e)=>{
+
+  e.preventDefault();
+
+  deferredPrompt = e;
+
+  document
+    .getElementById('installBanner')
+    .style.display='block';
+
 });
+
+document.addEventListener(
+'click',
+async(e)=>{
+
+  if(
+    e.target &&
+    e.target.id==='installBtn' &&
+    deferredPrompt
+  ){
+
+    deferredPrompt.prompt();
+
+    await deferredPrompt.userChoice;
+
+    deferredPrompt=null;
+
+    document
+      .getElementById('installBanner')
+      .style.display='none';
+
+  }
+
+});
+
+</script>
+
+<div id="installBanner"
+style="
+display:none;
+position:fixed;
+bottom:90px;
+left:10px;
+right:10px;
+background:#1A1A1A;
+color:white;
+padding:15px;
+border-radius:15px;
+border:2px solid #F0A500;
+z-index:9999;
+
+">
+
+<b>📲 Instalá La Cocina de Mel</b>
+
+<br><br>
+
+<button id="installBtn">
+Instalar
+</button>
+
+</div>
 
 </body>
 </html>
